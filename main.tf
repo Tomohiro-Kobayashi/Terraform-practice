@@ -1,10 +1,17 @@
-variable "access_key" {}
-variable "secret_key" {}
+variable "access_key" {
+  type = string
+}
+variable "secret_key" {
+  type = string
+}
 variable "region" {
   type    = string
   default = "ap-northeast-1"
 }
 variable "envirnment" {
+  type = string
+}
+variable "project" {
   type = string
 }
 
@@ -26,18 +33,4 @@ provider "aws" {
   region     = var.region
 }
 
-resource "aws_instance" "hello-world" {
-  ami           = "ami-02c3627b04781eada"
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "HelloWorld"
-  }
-
-  user_data = <<EOF
-#!/bin/bash
-amazon-linux-extras install -y nginx1.12
-systemctl start nginx
-EOF
-}
 
