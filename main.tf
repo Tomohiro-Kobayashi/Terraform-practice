@@ -1,7 +1,7 @@
-variable "access_key" {
+variable "aws_access_key" {
   type = string
 }
-variable "secret_key" {
+variable "aws_secret_key" {
   type = string
 }
 variable "region" {
@@ -28,8 +28,8 @@ terraform {
 
 provider "aws" {
   /* profile = "default" */
-  access_key = var.access_key
-  secret_key = var.secret_key
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
   region     = var.region
 }
 

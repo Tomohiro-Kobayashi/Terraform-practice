@@ -28,7 +28,7 @@ resource "aws_subnet" "public_subnet_1a" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name    = "${var.project}-${var.envirnment}--public-subnet-1a"
+    Name    = "${var.project}-${var.envirnment}-public-subnet-1a"
     Project = var.project
     Env     = var.envirnment
     Type    = "public"
@@ -56,7 +56,7 @@ resource "aws_subnet" "private_subnet_1a" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name    = "${var.project}-${var.envirnment}--private-subnet-1a"
+    Name    = "${var.project}-${var.envirnment}-private-subnet-1a"
     Project = var.project
     Env     = var.envirnment
     Type    = "private"
@@ -75,4 +75,70 @@ resource "aws_subnet" "private_subnet_1c" {
     Env     = var.envirnment
     Type    = "private"
   }
+}
+
+# ---------------------
+# Route table
+# ---------------------
+
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name    = "${var.project}-${var.envirnment}-public-rt"
+    Project = var.project
+    Env     = var.envirnment
+    Type    = "public"
+  }
+}
+
+resource "aws_route_table_association" "public_rt_1a" {
+  route_table_id = aws_route_table.public_rt.id
+  subnet_id      = aws_subnet.public_subnet_1a.id
+}
+
+resource "aws_route_table_association" "public_rt_1c" {
+  route_table_id = aws_route_table.public_rt.id
+  subnet_id      = aws_subnet.public_subnet_1c.id
+}
+
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name    = "${var.project}-${var.envirnment}-private-rt"
+    Project = var.project
+    Env     = var.envirnment
+    Type    = "private"
+  }
+}
+
+resource "aws_route_table_association" "private_rt_1a" {
+  route_table_id = aws_route_table.private_rt.id
+  subnet_id      = aws_subnet.private_subnet_1a.id
+}
+
+resource "aws_route_table_association" "private_rt_1c" {
+  route_table_id = aws_route_table.private_rt.id
+  subnet_id      = aws_subnet.private_subnet_1c.id
+}
+
+# ---------------------
+# Internet Gateway
+# ---------------------
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
+
+  tags = {
+    Name    = "${var.project}-${var.envirnment}-igw"
+    Project = var.project
+    Env     = var.envirnment
+  }
+}
+
+resource "aws_route" "public_rt_igw_r" {
+  route_table_id         = aws_route_table.public_rt.id
+  gateway_id             = aws_internet_gateway.igw.id
+  destination_cidr_block = "0.0.0.0/0"
 }
