@@ -47,3 +47,4 @@ terraform.rc
 *.hcl
 *.tfstate
 *.tfvars
+src/
